@@ -118,6 +118,10 @@ describe('$modal', function () {
     $rootScope.$digest();
   }
 
+  function isFocused(elm) {
+    return elm[0] === document.activeElement;
+  }
+
   describe('basic scenarios with default options', function () {
 
     it('should open and dismiss a modal with a minimal set of options', function () {
@@ -181,6 +185,18 @@ describe('$modal', function () {
 
       waitForBackdropAnimation();
       expect($document).not.toHaveBackdrop();
+    });
+
+    it('should focus on autofocus element', function () {
+      var modal = open({template: '<div>Content<input id="test877" autofocus></div>'});
+      $timeout.flush();
+      expect(isFocused($document.find('#test877'))).toBe(true);
+    });
+
+    it('should not focus on non-autofocus element', function () {
+      var modal = open({template: '<div>Content<input id="test877"></div>'});
+      $timeout.flush();
+      expect(isFocused($document.find('#test877'))).toBe(false);
     });
 
     it('should support closing on ESC', function () {
